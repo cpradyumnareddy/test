@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Current Time</title>
+    <title>Analog Clock</title>
     <style>
         body {
             display: flex;
@@ -13,30 +13,50 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
-        .time {
-            font-size: 3rem;
-            color: #333;
+        .clock {
+            width: 200px;
+            height: 200px;
+            border: 8px solid #333;
+            border-radius: 50%;
+            position: relative;
+            background-color: white;
+        }
+        .clock .hand {
+            width: 50%;
+            height: 6px;
+            background-color: #333;
+            position: absolute;
+            top: 50%;
+            transform-origin: 100%;
+            transform: rotate(90deg);
+            transition: transform 0.1s ease-in-out;
+        }
+        .clock .hour {
+            height: 8px;
+            background-color: #333;
+        }
+        .clock .minute {
+            height: 6px;
+            background-color: #666;
+        }
+        .clock .second {
+            height: 4px;
+            background-color: red;
+        }
+        .clock .center {
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 <body>
-    <div class="time" id="time"></div>
-
-    <script>
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            document.getElementById('time').textContent = timeString;
-        }
-
-        // Update the time immediately when the page loads
-        updateTime();
-
-        // Update the time every second
-        setInterval(updateTime, 1000);
-    </script>
-</body>
-</html>
+    <div class="clock">
+        <div class="hand hour" id="hour-hand"></div>
+        <div class="hand minute" id="minute-hand"></div>
+        <div class="hand second" id="second
