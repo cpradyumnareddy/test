@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analog Clock</title>
+    <title>Calculator</title>
     <style>
         body {
             display: flex;
@@ -13,50 +13,133 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
-        .clock {
-            width: 200px;
-            height: 200px;
-            border: 8px solid #333;
-            border-radius: 50%;
-            position: relative;
-            background-color: white;
+        .calculator {
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .clock .hand {
-            width: 50%;
-            height: 6px;
+        .display {
+            width: 100%;
+            height: 50px;
+            border: none;
+            background-color: #f3f3f3;
+            font-size: 2rem;
+            text-align: right;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .buttons button {
+            width: 100%;
+            height: 50px;
+            font-size: 1.5rem;
+            border: none;
             background-color: #333;
-            position: absolute;
-            top: 50%;
-            transform-origin: 100%;
-            transform: rotate(90deg);
-            transition: transform 0.1s ease-in-out;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .clock .hour {
-            height: 8px;
-            background-color: #333;
+        .buttons button:hover {
+            background-color: #555;
         }
-        .clock .minute {
-            height: 6px;
-            background-color: #666;
+        .buttons button.operator {
+            background-color: #f39c12;
         }
-        .clock .second {
-            height: 4px;
-            background-color: red;
-        }
-        .clock .center {
-            width: 10px;
-            height: 10px;
-            background-color: #333;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .buttons button.operator:hover {
+            background-color: #e67e22;
         }
     </style>
 </head>
 <body>
-    <div class="clock">
-        <div class="hand hour" id="hour-hand"></div>
-        <div class="hand minute" id="minute-hand"></div>
-        <div class="hand second" id="second
+    <div class="calculator">
+        <input type="text" class="display" id="display" readonly>
+        <div class="buttons">
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="operator" onclick="chooseOperation('/')">/</button>
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="operator" onclick="chooseOperation('*')">*</button>
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="operator" onclick="chooseOperation('-')">-</button>
+            <button onclick="appendNumber('0')">0</button>
+            <button onclick="appendNumber('.')">.</button>
+            <button onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="chooseOperation('+')">+</button>
+            <button class="operator" onclick="compute()" style="grid-column: span 4;">=</button>
+        </div>
+    </div>
+
+    <script>
+        let currentOperand = '';
+        let previousOperand = '';
+        let operation = null;
+
+        function appendNumber(number) {
+            if (number === '.' && currentOperand.includes('.')) return;
+            currentOperand = currentOperand.toString() + number.toString();
+            updateDisplay();
+        }
+
+        function chooseOperation(op) {
+            if (currentOperand === '') return;
+            if (previousOperand !== '') {
+                compute();
+            }
+            operation = op;
+            previousOperand = currentOperand;
+            currentOperand = '';
+        }
+
+        function compute() {
+            let computation;
+            const prev = parseFloat(previousOperand);
+            const current = parseFloat(currentOperand);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operation) {
+                case '+':
+                    computation = prev + current;
+                    break;
+                case '-':
+                    computation = prev - current;
+                    break;
+                case '*':
+                    computation = prev * current;
+                    break;
+                case '/':
+                    computation = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            currentOperand = computation;
+            operation = null;
+            previousOperand = '';
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentOperand = '';
+            previousOperand = '';
+            operation = null;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').value = currentOperand;
+        }
+    </script>
+</body>
+</html>
